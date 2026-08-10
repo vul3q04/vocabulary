@@ -2,6 +2,7 @@
 
 import React from "react";
 import useSWR from "swr";
+import Button from "@mui/material/Button";
 
 const fetcher = (url: string) =>
   fetch(url).then((res) => {
@@ -52,12 +53,9 @@ export default function Home() {
           )}
 
           <input value={word} onChange={(e) => setWord(e.target.value)}></input>
-          <button
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            onClick={addWord}
-          >
+          <Button variant="contained" onClick={addWord}>
             Add
-          </button>
+          </Button>
         </div>
       </main>
     </div>
