@@ -10,6 +10,7 @@ const fetcher = (url: string) =>
   });
 
 export default function Home() {
+  const [state, setState] = React.useState({ isActionLoading: false });
   const {
     data: { data: words } = { data: [] },
     error,
@@ -24,12 +25,15 @@ export default function Home() {
   const [word, setWord] = React.useState("");
 
   function addWord() {
+    setState({ ...state, isActionLoading: true });
     fetch("/api/word", {
       method: "POST",
       body: JSON.stringify({ name: word }),
     }).then(() => {
       setWord("");
       mutate();
+    }).finally(() => {
+      setState({ ...state, isActionLoading: false });
     });
   }
 
@@ -64,7 +68,11 @@ export default function Home() {
             value={word}
             onChange={(e) => setWord(e.target.value)}
           />
-          <Button variant="contained" onClick={addWord}>
+          <Button
+            variant="contained"
+            onClick={addWord}
+            loading={state.isActionLoading}
+          >
             Add
           </Button>
         </div>
