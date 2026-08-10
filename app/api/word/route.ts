@@ -1,3 +1,6 @@
+'use server';
+
+import "server-only";
 import dbConnect from "@/lib/mongodb";
 import Word from "@/models/word";
 

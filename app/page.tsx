@@ -2,7 +2,7 @@
 
 import React from "react";
 import useSWR from "swr";
-import Button from "@mui/material/Button";
+import { Button, TextField } from "@mui/material";
 
 const fetcher = (url: string) =>
   fetch(url).then((res) => {
@@ -52,7 +52,18 @@ export default function Home() {
             </div>
           )}
 
-          <input value={word} onChange={(e) => setWord(e.target.value)}></input>
+          <TextField
+            type="text"
+            name="word"
+            placeholder="word"
+            autoFocus
+            required
+            fullWidth
+            variant="outlined"
+            color="primary"
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
+          />
           <Button variant="contained" onClick={addWord}>
             Add
           </Button>

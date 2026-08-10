@@ -14,27 +14,54 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { login } from "@/app/actions/auth";
 
-export default function Login() {
-  const [state, action, pending] = React.useActionState(login, undefined);
+export default function Signup() {
   const [usernameError, setUsernameError] = React.useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [inviteCodeError, setInviteCodeError] = React.useState(false);
+  const [inviteCodeErrorMessage, setInviteCodeErrorMessage] =
+    React.useState("");
 
-  function handleSubmit() {}
+  function handleSubmit() {
+    fetch("/api/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: (document.getElementById("username") as HTMLInputElement)
+          .value,
+        password: (document.getElementById("password") as HTMLInputElement)
+          .value,
+        invite_code: (document.getElementById("invite_code") as HTMLInputElement)
+          .value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.href = "/";
+        } else {
+          setUsernameError(true);
+          setUsernameErrorMessage(data.message);
+          setPasswordError(true);
+          setPasswordErrorMessage(data.message);
+          setInviteCodeError(true);
+          setInviteCodeErrorMessage(data.message);
+        }
+      });
+  }
 
   return (
     <Container maxWidth="sm" className="gap-4 py-32">
       <Card className="p-4">
         <Typography component="h1" variant="h4">
-          Login
+          Signup
         </Typography>
         <Box
           component="form"
-          action={action}
-          method="POST"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -76,20 +103,33 @@ export default function Login() {
               color={passwordError ? "error" : "primary"}
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+          <FormControl>
+            <FormLabel htmlFor="invite_code">Invite Code</FormLabel>
+            <TextField
+              error={inviteCodeError}
+              helperText={inviteCodeErrorMessage}
+              id="invite_code"
+              type="text"
+              name="invite_code"
+              placeholder="Invite Code"
+              autoComplete="invite_code"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              color={inviteCodeError ? "error" : "primary"}
+            />
+          </FormControl>
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             onClick={handleSubmit}
           >
-            Login
-          </Button>
-          <Button type="button" fullWidth variant="contained" href="/signup">
             Signup
+          </Button>
+          <Button type="button" fullWidth variant="contained" href="/login">
+            Login
           </Button>
         </Box>
       </Card>
