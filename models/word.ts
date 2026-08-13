@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const wordSchema = new mongoose.Schema({
-  name: String
+  user_id: mongoose.Types.ObjectId,
+  name: String,
 });
 
 export default mongoose.models.Word || mongoose.model("Word", wordSchema);

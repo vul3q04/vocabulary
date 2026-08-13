@@ -5,7 +5,7 @@ import User from "@/models/user";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createSession } from "@/app/lib/session";
+import { createSession, decrypt } from "@/app/lib/session";
 
 type FormState =
   | {
@@ -57,4 +57,10 @@ export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
   redirect("/login");
+}
+
+export async function getCurrentUser() {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  return session;
 }
