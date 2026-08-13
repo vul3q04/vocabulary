@@ -29,12 +29,14 @@ export default function Home() {
     fetch("/api/word", {
       method: "POST",
       body: JSON.stringify({ name: word }),
-    }).then(() => {
-      setWord("");
-      mutate();
-    }).finally(() => {
-      setState({ ...state, isActionLoading: false });
-    });
+    })
+      .then(() => {
+        setWord("");
+        mutate();
+      })
+      .finally(() => {
+        setState({ ...state, isActionLoading: false });
+      });
   }
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import useSWR from "swr";
 import {
   Box,
   Button,
@@ -34,7 +33,6 @@ export default function Login() {
         <Box
           component="form"
           action={action}
-          method="POST"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -76,10 +74,6 @@ export default function Login() {
               color={passwordError ? "error" : "primary"}
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth

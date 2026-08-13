@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
 import "server-only";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/app/lib/mongodb";
 import Word from "@/models/word";
 
 export async function GET() {
@@ -13,7 +13,6 @@ export async function GET() {
     data: words,
   });
 }
-
 
 export async function POST(request: Request) {
   await dbConnect();

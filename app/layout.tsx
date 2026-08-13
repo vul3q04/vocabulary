@@ -12,14 +12,10 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Menu,
-  MenuItem,
-  FormGroup,
-  FormControlLabel,
-  Switch,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import { logout } from "@/app/actions/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +39,6 @@ const darkTheme = createTheme({
 // };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  const auth = false;
   return (
     <html
       lang="en"
@@ -65,19 +60,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 TinyChaos
               </Typography>
-              {auth && (
-                <div>
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                </div>
-              )}
+              <Button color="inherit" onClick={logout}>
+                Logout
+              </Button>
             </Toolbar>
           </AppBar>
         </Box>

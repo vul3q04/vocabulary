@@ -1,11 +1,11 @@
 "use server";
 
-import "server-only";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/app/lib/mongodb";
 import User from "@/models/user";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-import { createSession } from "@/lib/session";
+import { cookies } from "next/headers";
+import { createSession } from "@/app/lib/session";
 
 type FormState =
   | {
@@ -51,4 +51,10 @@ export async function login(state: FormState, formData: FormData) {
   await createSession(user._id.toString());
   // 5. Redirect user
   redirect("/");
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+  redirect("/login");
 }

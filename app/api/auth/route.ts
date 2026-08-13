@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/app/lib/mongodb";
 import User from "@/models/user";
 import bcrypt from "bcrypt";
 
