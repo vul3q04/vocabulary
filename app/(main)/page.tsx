@@ -68,7 +68,7 @@ export default function Home() {
   }
 
   return (
-    <Material.Card color="inherit">
+    <Material.Card>
       <Material.CardContent>
         <Material.Typography variant="h5" color="text.secondary">
           List of vocabulary words for learning English.

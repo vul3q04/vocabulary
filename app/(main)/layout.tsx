@@ -18,7 +18,7 @@ export default function PublicLayout({
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar>
           <Toolbar>
             <IconButton
               size="large"
@@ -38,7 +38,14 @@ export default function PublicLayout({
           </Toolbar>
         </AppBar>
       </Box>
-      <Container>{children}</Container>
+      <Toolbar></Toolbar>
+      <Container
+        sx={{
+          minHeight: "calc(100vh - 64px)",
+        }}
+      >
+        {children}
+      </Container>
     </>
   );
 }

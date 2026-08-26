@@ -26,8 +26,8 @@ export default function Login() {
   function handleSubmit() {}
 
   return (
-    <Container maxWidth="sm" className="gap-4 py-32">
-      <Card className="p-4">
+    <Container maxWidth="xs">
+      <Card sx={{ p: 4 }}>
         <Typography component="h1" variant="h4">
           Login
         </Typography>
