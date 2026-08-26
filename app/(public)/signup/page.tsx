@@ -16,6 +16,12 @@ import {
 } from "@mui/material";
 
 export default function Signup() {
+  const formRef = React.useRef(null);
+  const [state, setState] = React.useState({
+    username: "",
+    password: "",
+    inviteCode: "",
+  });
   const [usernameError, setUsernameError] = React.useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
@@ -24,30 +30,21 @@ export default function Signup() {
   const [inviteCodeErrorMessage, setInviteCodeErrorMessage] =
     React.useState("");
 
-  function handleSubmit() {
+  function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
+
     fetch("/api/auth", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        username: (document.getElementById("username") as HTMLInputElement)
-          .value,
-        password: (document.getElementById("password") as HTMLInputElement)
-          .value,
-        invite_code: (document.getElementById("invite_code") as HTMLInputElement)
-          .value,
-      }),
+      body: JSON.stringify(state),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           window.location.href = "/";
         } else {
-          setUsernameError(true);
-          setUsernameErrorMessage(data.message);
-          setPasswordError(true);
-          setPasswordErrorMessage(data.message);
           setInviteCodeError(true);
           setInviteCodeErrorMessage(data.message);
         }
@@ -61,6 +58,9 @@ export default function Signup() {
           Signup
         </Typography>
         <Box
+          ref={formRef}
+          method="POST"
+          action="/api/auth"
           component="form"
           sx={{
             display: "flex",
@@ -68,6 +68,7 @@ export default function Signup() {
             width: "100%",
             gap: 2,
           }}
+          onSubmit={handleSubmit}
         >
           <FormControl>
             <FormLabel htmlFor="username">Username</FormLabel>
@@ -84,6 +85,8 @@ export default function Signup() {
               fullWidth
               variant="outlined"
               color={usernameError ? "error" : "primary"}
+              value={state.username}
+              onChange={(e) => setState({ ...state, username: e.target.value })}
             />
           </FormControl>
           <FormControl>
@@ -101,6 +104,8 @@ export default function Signup() {
               fullWidth
               variant="outlined"
               color={passwordError ? "error" : "primary"}
+              value={state.password}
+              onChange={(e) => setState({ ...state, password: e.target.value })}
             />
           </FormControl>
           <FormControl>
@@ -118,18 +123,17 @@ export default function Signup() {
               fullWidth
               variant="outlined"
               color={inviteCodeError ? "error" : "primary"}
+              value={state.inviteCode}
+              onChange={(e) =>
+                setState({ ...state, inviteCode: e.target.value })
+              }
             />
           </FormControl>
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" fullWidth variant="contained">
             Signup
           </Button>
-          <Button type="button" fullWidth variant="contained" href="/login">
-            Login
+          <Button type="button" fullWidth variant="outlined" href="/login">
+            Back to login
           </Button>
         </Box>
       </Card>

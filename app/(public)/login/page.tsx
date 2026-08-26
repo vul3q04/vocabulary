@@ -2,6 +2,7 @@
 
 import React from "react";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -74,6 +75,7 @@ export default function Login() {
               color={passwordError ? "error" : "primary"}
             />
           </FormControl>
+          {state?.message && <Alert severity="error">{state?.message}</Alert>}
           <Button
             type="submit"
             fullWidth
@@ -82,7 +84,13 @@ export default function Login() {
           >
             Login
           </Button>
-          <Button type="button" fullWidth variant="contained" href="/signup">
+          <Button
+            type="button"
+            color="secondary"
+            fullWidth
+            variant="contained"
+            href="/signup"
+          >
             Signup
           </Button>
         </Box>

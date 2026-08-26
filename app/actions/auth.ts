@@ -9,10 +9,6 @@ import { createSession, decrypt } from "@/app/lib/session";
 
 type FormState =
   | {
-      errors?: {
-        username?: string[];
-        password?: string[];
-      };
       message?: string;
     }
   | undefined;
@@ -32,18 +28,14 @@ export async function login(state: FormState, formData: FormData) {
 
   if (!user) {
     return {
-      errors: {
-        username: ["An error occurred while creating your account."],
-      },
+      message: "Login fail. Please check your username or password",
     };
   }
 
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
     return {
-      errors: {
-        password: ["Invalid password."],
-      },
+      message: "Login fail. Please check your username or password",
     };
   }
   // Current steps:
