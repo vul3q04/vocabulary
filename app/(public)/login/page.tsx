@@ -17,13 +17,18 @@ import {
 import { login } from "@/app/actions/auth";
 
 export default function Login() {
-  const [state, action, pending] = React.useActionState(login, undefined);
-  const [usernameError, setUsernameError] = React.useState(false);
-  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [stateError, action, pending] = React.useActionState(login, {});
+  const [state, setState] = React.useState({
+    username: "",
+    password: "",
+  });
 
-  function handleSubmit() {}
+  function submitLogin(e: React.SubmitEvent) {
+    e.preventDefault();
+    React.startTransition(() => {
+      action(state);
+    });
+  }
 
   return (
     <Container maxWidth="xs">
@@ -33,7 +38,7 @@ export default function Login() {
         </Typography>
         <Box
           component="form"
-          action={action}
+          onSubmit={submitLogin}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -44,8 +49,8 @@ export default function Login() {
           <FormControl>
             <FormLabel htmlFor="username">Username</FormLabel>
             <TextField
-              error={usernameError}
-              helperText={usernameErrorMessage}
+              error={!!stateError.error?.username}
+              helperText={stateError.error?.username?.[0] || ""}
               id="username"
               type="text"
               name="username"
@@ -55,14 +60,18 @@ export default function Login() {
               required
               fullWidth
               variant="outlined"
-              color={usernameError ? "error" : "primary"}
+              color={!!stateError.error?.username ? "error" : "primary"}
+              value={state.username}
+              onChange={(e) => {
+                setState({ ...state, username: e.target.value });
+              }}
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
+              error={!!stateError.error?.password}
+              helperText={stateError.error?.password?.[0] || ""}
               name="password"
               placeholder="••••••"
               type="password"
@@ -72,15 +81,21 @@ export default function Login() {
               required
               fullWidth
               variant="outlined"
-              color={passwordError ? "error" : "primary"}
+              color={!!stateError.error?.password ? "error" : "primary"}
+              value={state.password}
+              onChange={(e) => {
+                setState({ ...state, password: e.target.value });
+              }}
             />
           </FormControl>
-          {state?.message && <Alert severity="error">{state?.message}</Alert>}
+          {stateError.message && (
+            <Alert severity="error">{stateError.message}</Alert>
+          )}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            onClick={handleSubmit}
+            onSubmit={submitLogin}
           >
             Login
           </Button>

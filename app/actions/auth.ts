@@ -6,20 +6,40 @@ import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createSession, decrypt } from "@/app/lib/session";
+import * as z from "zod";
 
-type FormState =
-  | {
-      message?: string;
-    }
-  | undefined;
+export type typeLoginState = {
+  username: string;
+  password: string;
+};
 
-export async function login(state: FormState, formData: FormData) {
+export type typeLoginErrorState = {
+  error?: {
+    username?: string[];
+    password?: string[];
+  };
+  message?: string;
+};
+
+const schemaLogin = z.object({
+  username: z.string().min(6).max(20),
+  password: z.string().min(6).max(20),
+});
+export async function login(
+  state: typeLoginErrorState,
+  payload: typeLoginState,
+): Promise<typeLoginErrorState> {
   // 1. Validate form fields
-  // ...
+  const valid = schemaLogin.safeParse(payload);
+  if (!valid.success) {
+    return {
+      error: z.flattenError(valid.error).fieldErrors,
+    };
+  }
 
   // 2. Prepare data for insertion into database
-  const username = formData.get("username") as string;
-  const password = formData.get("password") as string;
+  const username = valid.data.username;
+  const password = valid.data.password;
 
   // 3. Insert the user into the database or call an Auth Library's API
 
@@ -43,6 +63,32 @@ export async function login(state: FormState, formData: FormData) {
   await createSession(user._id.toString());
   // 5. Redirect user
   redirect("/");
+}
+
+const schemaSignup = z.object({
+  username: z.string().min(6).max(20),
+  password: z.string().min(6).max(20),
+  invite_code: z.literal([process.env.INVITE_CODE]),
+});
+export async function signup(
+  state: typeLoginErrorState & { error?: { invite_code?: string[] } },
+  payload: typeLoginState & { invite_code: string },
+): Promise<typeLoginErrorState & { error?: { invite_code?: string[] } }> {
+  // 1. Validate form fields
+  const valid = schemaSignup.safeParse(payload);
+  if (!valid.success) {
+    return {
+      error: z.flattenError(valid.error).fieldErrors,
+    };
+  }
+
+  const { username, password } = valid.data;
+
+  await dbConnect();
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await User.create({ username, password: hashedPassword });
+
+  redirect("/login");
 }
 
 export async function logout() {

@@ -14,41 +14,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { signup } from "@/app/actions/auth";
 
 export default function Signup() {
-  const formRef = React.useRef(null);
+  const [stateError, action, pending] = React.useActionState(signup, {});
   const [state, setState] = React.useState({
     username: "",
     password: "",
-    inviteCode: "",
+    invite_code: "",
   });
-  const [usernameError, setUsernameError] = React.useState(false);
-  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [inviteCodeError, setInviteCodeError] = React.useState(false);
-  const [inviteCodeErrorMessage, setInviteCodeErrorMessage] =
-    React.useState("");
 
-  function handleSubmit(e: React.SubmitEvent) {
+  function submitSignup(e: React.SubmitEvent) {
     e.preventDefault();
-
-    fetch("/api/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(state),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          window.location.href = "/";
-        } else {
-          setInviteCodeError(true);
-          setInviteCodeErrorMessage(data.message);
-        }
-      });
+    React.startTransition(() => {
+      action(state);
+    });
   }
 
   return (
@@ -58,9 +38,6 @@ export default function Signup() {
           Signup
         </Typography>
         <Box
-          ref={formRef}
-          method="POST"
-          action="/api/auth"
           component="form"
           sx={{
             display: "flex",
@@ -68,13 +45,13 @@ export default function Signup() {
             width: "100%",
             gap: 2,
           }}
-          onSubmit={handleSubmit}
+          onSubmit={submitSignup}
         >
           <FormControl>
             <FormLabel htmlFor="username">Username</FormLabel>
             <TextField
-              error={usernameError}
-              helperText={usernameErrorMessage}
+              error={!!stateError.error?.username}
+              helperText={stateError.error?.username?.[0] || ""}
               id="username"
               type="text"
               name="username"
@@ -84,7 +61,7 @@ export default function Signup() {
               required
               fullWidth
               variant="outlined"
-              color={usernameError ? "error" : "primary"}
+              color={!!stateError.error?.username ? "error" : "primary"}
               value={state.username}
               onChange={(e) => setState({ ...state, username: e.target.value })}
             />
@@ -92,8 +69,8 @@ export default function Signup() {
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
+              error={!!stateError.error?.password}
+              helperText={stateError.error?.password?.[0] || ""}
               name="password"
               placeholder="••••••"
               type="password"
@@ -103,7 +80,7 @@ export default function Signup() {
               required
               fullWidth
               variant="outlined"
-              color={passwordError ? "error" : "primary"}
+              color={!!stateError.error?.password ? "error" : "primary"}
               value={state.password}
               onChange={(e) => setState({ ...state, password: e.target.value })}
             />
@@ -111,8 +88,8 @@ export default function Signup() {
           <FormControl>
             <FormLabel htmlFor="invite_code">Invite Code</FormLabel>
             <TextField
-              error={inviteCodeError}
-              helperText={inviteCodeErrorMessage}
+              error={!!stateError.error?.invite_code}
+              helperText={stateError.error?.invite_code?.[0] || ""}
               id="invite_code"
               type="text"
               name="invite_code"
@@ -122,10 +99,10 @@ export default function Signup() {
               required
               fullWidth
               variant="outlined"
-              color={inviteCodeError ? "error" : "primary"}
-              value={state.inviteCode}
+              color={!!stateError.error?.invite_code ? "error" : "primary"}
+              value={state.invite_code}
               onChange={(e) =>
-                setState({ ...state, inviteCode: e.target.value })
+                setState({ ...state, invite_code: e.target.value })
               }
             />
           </FormControl>
