@@ -7,3 +7,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+Project rules reference: see `./rules/README.md`. OpenSpec workflow applies: `changes/` (中文) vs `specs/` (英文). AI-assisted code requires TDD (vitest) and must pass `npm run lint` + `npm run build`.
