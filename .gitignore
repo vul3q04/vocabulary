@@ -27,7 +27,7 @@
 # env files (can opt-in for committing if needed)
 .env*
 
-# openspec changes
+# openspec changes (work in progress, should not be committed)
 /openspec/changes
 
 # vercel
