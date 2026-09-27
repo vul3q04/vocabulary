@@ -8,4 +8,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## 檔案操作安全
+- 刪除任何檔案前必須先獲得使用者同意。
+
+## Git 操作限制
+- 您只能執行 `git commit` 操作，禁止直接 `git push` 到遠端。
+- 遠端設定（如 `git remote add`、`git remote set-url` 等）必須由使用者親自執行。
+
 Project rules reference: see `./rules/README.md`. OpenSpec workflow applies: `changes/` (中文) vs `specs/` (英文). AI-assisted code requires TDD (vitest) and must pass `npm run lint` + `npm run build`.
+
+## 檔案操作安全
+- 刪除任何檔案前必須先獲得使用者同意。
