@@ -29,8 +29,6 @@
 
 # openspec changes
 /openspec/changes
-# openspec specs (generated from changes, should not be committed)
-/openspec/specs
 
 # vercel
 .vercel
